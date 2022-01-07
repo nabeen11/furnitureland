@@ -58,11 +58,18 @@ if ($the_query->have_posts()) { ?>
                 <!-- Single Category -->
                 <?php foreach ($terms as $term) {
 
-                    $thumbnail_id = get_woocommerce_term_meta($term->term_id, 'thumbnail_id', true );
+                    $thumbnail_id = get_woocommerce_term_meta(
+                        $term->term_id,
+                        'thumbnail_id',
+                        true
+                    );
                     $image = wp_get_attachment_url($thumbnail_id);
                     ?>
                 <div class=" swiper-slide">
-                    <a href="<?php echo get_term_link( $term, 'product_cat' ); ?>" class="category-inner ">
+                    <a href="<?php echo get_term_link(
+                        $term,
+                        'product_cat'
+                    ); ?>" class="category-inner ">
                         <div class="category-single-item">
                             <img src="<?php echo $image; ?>" alt="<?php echo $term->name; ?>">
                             <span class="title"><?php echo $term->name; ?></span>
@@ -78,6 +85,11 @@ if ($the_query->have_posts()) { ?>
 </div>
 
 <!-- Product Category End -->
+<?php
+// echo do_shortcode('[woocommerce_product_filter_attribute attribute="color"]')
+// echo do_shortcode('[products limit="5" columns="4" orderby="id" order="DESC" best_selling="true" ]
+// ')
+?>
 
 <!-- Product tab Area Start -->
 <div class="section product-tab-area">
@@ -90,7 +102,6 @@ if ($the_query->have_posts()) { ?>
                         tempor incididunt ut labore</p>
                 </div>
             </div>
-
             <!-- Tab Start -->
             <div class="col-md-12 text-center mb-40px" data-aos="fade-up" data-aos-delay="200">
                 <ul class="product-tab-nav nav justify-content-center">
@@ -104,8 +115,8 @@ if ($the_query->have_posts()) { ?>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tab-product-sale-item">Sale
-                            Items</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab-product-featured-item">Featured
+                            Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab-product-on-sales">On
@@ -121,17 +132,44 @@ if ($the_query->have_posts()) { ?>
                     <!-- 1st tab start -->
                     <div class="tab-pane fade show active" id="tab-product-new-arrivals">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="200">
+                            <?php
+                            $counter = 0;
+                            $args = [
+                                'post_type' => 'product',
+                                'order' => 'DESC',
+                                'orderby' => 'ID',
+                                'posts_per_page' => 8,
+                            ];
+                            $the_query = new WP_Query($args);
+                            while ($the_query->have_posts()) {
+
+                                $the_query->the_post();
+
+                                $image = get_field('image');
+                                ?>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up" data-aos-delay="<?php if (
+                                $counter < 800
+                            ) {
+                                echo $counter = $counter + 200;
+                            } else {
+                                $counter = 0;
+                                echo $counter = $counter + 200;
+                            } ?>">
                                 <!-- Single Prodect -->
                                 <div class="product">
                                     <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/1.jpg"
-                                                alt="Product" />
+                                        <a href="<?php  the_permalink(); ?>" class="image">
+                                            <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()); ?>"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php if (!empty($image)) { ?>
+                                            <img class="hover-image" src="<?php echo esc_url(
+                                                $image['url']
+                                            ); ?>" alt="<?php echo get_the_title(); ?>" />
+                                            <?php } else { ?>
                                             <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/2.jpg"
-                                                alt="Product" />
+                                                src="https://template.hasthemes.com/furns/furns/assets/images/product-image/2.jpg"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php } ?>
                                         </a>
                                         <span class="badges">
                                             <span class="new">New</span>
@@ -154,323 +192,71 @@ if ($the_query->have_posts()) { ?>
                                     </div>
                                     <div class="content">
                                         <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Simple minimal Chair
+                                            <a href="shop-left-sidebar.html"><?php echo get_the_title(); ?>
                                             </a>
                                         </h5>
                                         <span class="price">
-                                            <span class="new">$38.50</span>
+                                            <?php
+                                            global $post, $product;
+                                            $product = wc_get_product( $post->ID ); // Works for any product type
+                                            ?>
+                                            <span class="new"><?php echo $product->get_price_html(); ?></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/3.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/4.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-10%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$48.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/5.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/6.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-7%</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                            <span class="old">$38.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/7.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/8.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="200">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/9.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/10.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-5%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Table</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$40.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6  mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/11.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/12.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-es-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/13.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/14.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 " data-aos="fade-up" data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/15.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/16.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
+                            <?php
+                            }
+                            ?>
+
+
                         </div>
                     </div>
                     <!-- 1st tab end -->
                     <!-- 2nd tab start -->
                     <div class="tab-pane fade" id="tab-product-best-sellers">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="200">
+                            <?php
+                            $counter = 0;
+                            $args = [
+                                'post_type' => 'product',
+                                'order' => 'DESC',
+                                'orderby' => 'ID',
+                                'posts_per_page' => 8,
+                                'meta_key' => 'total_sales',
+                                'orderby' => 'meta_value_num',
+                                // 'order' => 'DESC',
+                            ];
+                            $the_query = new WP_Query($args);
+                            while ($the_query->have_posts()) {
+
+                                $the_query->the_post();
+
+                                $image = get_field('image');
+                                ?>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up" data-aos-delay="<?php if (
+                                $counter < 800
+                            ) {
+                                echo $counter = $counter + 200;
+                            } else {
+                                $counter = 0;
+                                echo $counter = $counter + 200;
+                            } ?>">
                                 <!-- Single Prodect -->
                                 <div class="product">
                                     <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/1.jpg"
-                                                alt="Product" />
+                                        <a href="<?php  the_permalink(); ?>" class="image">
+                                            <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()); ?>"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php if (!empty($image)) { ?>
+                                            <img class="hover-image" src="<?php echo esc_url(
+                                                $image['url']
+                                            ); ?>" alt="<?php echo get_the_title(); ?>" />
+                                            <?php } else { ?>
                                             <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/2.jpg"
-                                                alt="Product" />
+                                                src="https://template.hasthemes.com/furns/furns/assets/images/product-image/2.jpg"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php } ?>
                                         </a>
                                         <span class="badges">
                                             <span class="new">New</span>
@@ -493,323 +279,73 @@ if ($the_query->have_posts()) { ?>
                                     </div>
                                     <div class="content">
                                         <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Simple minimal Chair
+                                            <a href="shop-left-sidebar.html"><?php echo get_the_title(); ?>
                                             </a>
                                         </h5>
                                         <span class="price">
-                                            <span class="new">$38.50</span>
+                                            <?php
+                                            global $post, $product;
+                                            $product = wc_get_product( $post->ID ); // Works for any product type
+                                            ?>
+                                            <span class="new"><?php echo $product->get_price_html(); ?></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/3.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/4.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-10%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$48.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/5.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/6.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-7%</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                            <span class="old">$38.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/7.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/8.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="200">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/9.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/10.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-5%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Table</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$40.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6  mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/11.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/12.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-es-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/13.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/14.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 " data-aos="fade-up" data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/15.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/16.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
                     <!-- 2nd tab end -->
                     <!-- 3rd tab start -->
-                    <div class="tab-pane fade" id="tab-product-sale-item">
+                    <div class="tab-pane fade" id="tab-product-featured-item">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="200">
+                            <?php
+                            $counter = 0;
+                            $args = [
+                                'post_type' => 'product',
+                                'order' => 'DESC',
+                                'orderby' => 'ID',
+                                'posts_per_page' => 8,
+                                'tax_query' => array(
+                                    array(
+                                    'taxonomy' => 'product_visibility',
+                                    'terms'    => 'featured',
+                                    'operator' => 'IN',
+                                    )
+                                    )
+                            ];
+                            $the_query = new WP_Query($args);
+                            while ($the_query->have_posts()) {
+
+                                $the_query->the_post();
+
+                                $image = get_field('image');
+                                ?>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up" data-aos-delay="<?php if (
+                                $counter < 800
+                            ) {
+                                echo $counter = $counter + 200;
+                            } else {
+                                $counter = 0;
+                                echo $counter = $counter + 200;
+                            } ?>">
                                 <!-- Single Prodect -->
                                 <div class="product">
                                     <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/1.jpg"
-                                                alt="Product" />
+                                        <a href="<?php  the_permalink(); ?>" class="image">
+                                            <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()); ?>"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php if (!empty($image)) { ?>
+                                            <img class="hover-image" src="<?php echo esc_url(
+                                                $image['url']
+                                            ); ?>" alt="<?php echo get_the_title(); ?>" />
+                                            <?php } else { ?>
                                             <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/2.jpg"
-                                                alt="Product" />
+                                                src="https://template.hasthemes.com/furns/furns/assets/images/product-image/2.jpg"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php } ?>
                                         </a>
                                         <span class="badges">
                                             <span class="new">New</span>
@@ -832,326 +368,77 @@ if ($the_query->have_posts()) { ?>
                                     </div>
                                     <div class="content">
                                         <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Simple minimal Chair
+                                            <a href="shop-left-sidebar.html"><?php echo get_the_title(); ?>
                                             </a>
                                         </h5>
                                         <span class="price">
-                                            <span class="new">$38.50</span>
+                                            <?php
+                                            global $post, $product;
+                                            $product = wc_get_product( $post->ID ); // Works for any product type
+                                            ?>
+                                            <span class="new"><?php echo $product->get_price_html(); ?></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/3.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/4.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-10%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$48.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/5.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/6.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-7%</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                            <span class="old">$38.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/7.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/8.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="200">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/9.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/10.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-5%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Table</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$40.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6  mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/11.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/12.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-es-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/13.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/14.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 " data-aos="fade-up" data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/15.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/16.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
                     <!-- 3rd tab end -->
                     <!-- 4th tab start -->
                     <div class="tab-pane fade" id="tab-product-on-sales">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="200">
+                            <?php
+                            $counter = 0;
+                            $args = [
+                                'post_type' => 'product',
+                                'order' => 'DESC',
+                                'orderby' => 'ID',
+                                'posts_per_page' => 8,
+                                'meta_query'     => array(
+                                    array(
+                                        'key'           => '_sale_price',
+                                        'value'         => 0,
+                                        'compare'       => '>',
+                                        'type'          => 'numeric'
+                                    )
+                                )
+                            ];
+                            $the_query = new WP_Query($args);
+                            while ($the_query->have_posts()) {
+
+                                $the_query->the_post();
+
+                                $image = get_field('image');
+                                ?>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up" data-aos-delay="<?php if (
+                                $counter < 800
+                            ) {
+                                echo $counter = $counter + 200;
+                            } else {
+                                $counter = 0;
+                                echo $counter = $counter + 200;
+                            } ?>">
                                 <!-- Single Prodect -->
                                 <div class="product">
                                     <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/1.jpg"
-                                                alt="Product" />
+                                        <a href="<?php  the_permalink(); ?>" class="image">
+                                            <img src="<?php echo get_the_post_thumbnail_url(get_the_ID()); ?>"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php if (!empty($image)) { ?>
+                                            <img class="hover-image" src="<?php echo esc_url(
+                                                $image['url']
+                                            ); ?>" alt="<?php echo get_the_title(); ?>" />
+                                            <?php } else { ?>
                                             <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/2.jpg"
-                                                alt="Product" />
+                                                src="https://template.hasthemes.com/furns/furns/assets/images/product-image/2.jpg"
+                                                alt="<?php echo get_the_title(); ?>" />
+                                            <?php } ?>
                                         </a>
                                         <span class="badges">
-                                            <span class="new">New</span>
+                                            <span class="sale">Sale</span>
                                         </span>
                                         <div class="actions">
                                             <a href="wishlist.html" class="action wishlist" title="Wishlist">
@@ -1171,306 +458,22 @@ if ($the_query->have_posts()) { ?>
                                     </div>
                                     <div class="content">
                                         <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Simple minimal Chair
+                                            <a href="shop-left-sidebar.html"><?php echo get_the_title(); ?>
                                             </a>
                                         </h5>
                                         <span class="price">
-                                            <span class="new">$38.50</span>
+                                            <?php
+                                            global $post, $product;
+                                            $product = wc_get_product( $post->ID ); // Works for any product type
+                                            ?>
+                                            <span class="new"><?php echo $product->get_price_html(); ?></span>
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/3.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/4.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-10%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$48.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/5.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/6.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-7%</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                            <span class="old">$38.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-30px" data-aos="fade-up"
-                                data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/7.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/8.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="200">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/9.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/10.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="sale">-5%</span>
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Table</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                            <span class="old">$40.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6  mb-md-30px mb-lm-30px" data-aos="fade-up"
-                                data-aos-delay="400">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/11.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/12.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Wooden decorations</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-es-30px" data-aos="fade-up"
-                                data-aos-delay="600">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/13.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/14.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges"></span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">High quality vase bottle</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$30.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 " data-aos="fade-up" data-aos-delay="800">
-                                <!-- Single Prodect -->
-                                <div class="product">
-                                    <div class="thumb">
-                                        <a href="shop-left-sidebar.html" class="image">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/images/product-image/15.jpg"
-                                                alt="Product" />
-                                            <img class="hover-image"
-                                                src="<?php echo get_template_directory_uri(); ?>/images/product-image/16.jpg"
-                                                alt="Product" />
-                                        </a>
-                                        <span class="badges">
-                                            <span class="new">New</span>
-                                        </span>
-                                        <div class="actions">
-                                            <a href="wishlist.html" class="action wishlist" title="Wishlist">
-                                                <i class="icon-heart"></i>
-                                            </a>
-                                            <a href="#" class="action quickview" data-link-action="quickview"
-                                                title="Quick view" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal">
-                                                <i class="icon-size-fullscreen"></i>
-                                            </a>
-                                            <a href="compare.html" class="action compare" title="Compare">
-                                                <i class="icon-refresh"></i>
-                                            </a>
-                                        </div>
-                                        <button title="Add To Cart" class=" add-to-cart">Add
-                                            To Cart</button>
-                                    </div>
-                                    <div class="content">
-                                        <h5 class="title">
-                                            <a href="shop-left-sidebar.html">Living & Bedroom Chair</a>
-                                        </h5>
-                                        <span class="price">
-                                            <span class="new">$38.50</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!-- Single Prodect -->
-                            </div>
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
                     <!-- 4th tab end -->

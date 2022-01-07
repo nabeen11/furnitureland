@@ -1,0 +1,8 @@
+2022-01-07T05:13:26+00:00 CRITICAL Uncaught Error: Call to undefined function get_regular_price() in C:\xampp\htdocs\furniture\wp-content\themes\furniture\front-page.php:182
+Stack trace:
+#0 C:\xampp\htdocs\furniture\wp-includes\template-loader.php(106): include()
+#1 C:\xampp\htdocs\furniture\wp-blog-header.php(19): require_once('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\furniture\index.php(17): require('C:\\xampp\\htdocs...')
+#3 {main}
+  thrown in C:\xampp\htdocs\furniture\wp-content\themes\furniture\front-page.php on line 182
+
