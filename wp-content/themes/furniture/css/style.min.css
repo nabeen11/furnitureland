@@ -5805,7 +5805,9 @@ only screen and (min-width:768px) and (max-width:991px) {
 
 .product .thumb .actions .action i {
     font-size: 14px;
-    line-height: 1
+    line-height: 1;
+
+
 }
 
 .product .thumb .actions .action+.action {
@@ -5820,7 +5822,8 @@ only screen and (min-width:768px) and (max-width:991px) {
 }
 
 .product .thumb .actions .action.active {
-    color: #ff7004
+    color: #ff7004;
+    background-color: white;
 }
 
 .product .thumb .actions .action:hover:not(.active) {

@@ -162,7 +162,11 @@
     </div>
 </div>
 <!-- Footer Area End -->
-
+<?php
+$args = array('post_type' => 'product', 'posts_per_page' => 1);
+$the_query = new WP_Query($args);
+if($the_query->have_posts()){
+?>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
@@ -243,7 +247,7 @@
                     </div>
                     <div class="col-md-7 col-sm-12 col-xs-12">
                         <div class="product-details-content quickview-content">
-                            <h2>Originals Kaval Windbr</h2>
+                            <h2><?php echo get_the_title(); ?></h2>
                             <p class="reference">Reference:<span>
                                     demo_17</span>
                             </p>
@@ -317,6 +321,8 @@
         </div>
     </div>
 </div>
+
+<?php } ?>
 <!-- Modal end -->
 
 <!-- Use the minified version files listed below for better performance and remove the files listed above -->
